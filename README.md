@@ -55,3 +55,6 @@ Der Login in Headlamp erfolgt mit einem live erzeugten Kubernetes-Token:
 ```bash
 kubectl -n headlamp create token headlamp-viewer --duration=24h
 ```
+
+Der `headlamp-viewer` ist read-only. Er darf Kubernetes-Ressourcen, Nodes und
+Metrics ansehen, aber keine Secrets lesen und nichts im Cluster ändern.

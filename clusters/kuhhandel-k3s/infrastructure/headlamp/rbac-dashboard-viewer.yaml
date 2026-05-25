@@ -1,0 +1,45 @@
+# Diese Zusatzrechte machen den read-only Headlamp-Login wirklich dashboard-tauglich.
+#
+# Die normale Kubernetes-Rolle `view` reicht für viele Namespaced-Ressourcen,
+# aber nicht für clusterweite Nodes. Headlamp braucht Nodes und Metrics, um die
+# Übersichten für Nodes, CPU und RAM anzeigen zu können.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: headlamp-dashboard-viewer
+rules:
+  # Clusterweite Übersicht: Nodes sind nicht in einem Namespace.
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+      - nodes/status
+    verbs:
+      - get
+      - list
+      - watch
+
+  # Live-Metriken für CPU/RAM. Der metrics-server läuft bereits im Cluster.
+  - apiGroups:
+      - metrics.k8s.io
+    resources:
+      - pods
+      - nodes
+    verbs:
+      - get
+      - list
+      - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: headlamp-dashboard-viewer
+subjects:
+  - kind: ServiceAccount
+    name: headlamp-viewer
+    namespace: headlamp
+roleRef:
+  kind: ClusterRole
+  name: headlamp-dashboard-viewer
+  apiGroup: rbac.authorization.k8s.io
+
