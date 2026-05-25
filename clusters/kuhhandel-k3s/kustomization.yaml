@@ -1,0 +1,13 @@
+# Diese Datei ist der Einstiegspunkt für Flux in diesem Deploy-Repo.
+#
+# Flux startet im Ordner `clusters/kuhhandel-k3s` und wendet genau die Dateien
+# an, die hier aufgelistet sind.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - sources/kuhhandel-app.yaml
+  - images/kuhhandel-server.yaml
+  - images/automation.yaml
+  - apps/production.yaml
+  - apps/staging.yaml

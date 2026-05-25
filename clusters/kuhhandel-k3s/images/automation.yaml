@@ -1,0 +1,41 @@
+# Diese Datei sagt Flux:
+# "Wenn eine ImagePolicy eine neuere passende Version findet, schreibe diese
+# Version in die markierten Felder dieses Deploy-Repos."
+#
+# Dadurch bleibt das normale App-Repo geschützt. Nur dieses Deploy-Repo bekommt
+# automatische Bot-Commits mit neuen Image-Tags.
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageUpdateAutomation
+metadata:
+  name: kuhhandel-server
+  namespace: flux-system
+spec:
+  # Wie oft Flux prüft, ob eine Policy einen neueren Image-Tag gefunden hat.
+  interval: 1m0s
+
+  # `flux-system` ist die Git-Quelle dieses Deploy-Repos, die beim Bootstrap
+  # erzeugt wird.
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+
+  git:
+    # Flux checkt den main-Branch dieses Deploy-Repos aus.
+    checkout:
+      ref:
+        branch: main
+
+    # So sehen die automatischen Commits im Deploy-Repo aus.
+    commit:
+      author:
+        name: fluxcdbot
+        email: fluxcdbot@users.noreply.github.com
+      messageTemplate: "Update Kuhhandel image tags"
+
+    # Flux pusht die geänderten Tags wieder in den main-Branch des Deploy-Repos.
+    push:
+      branch: main
+
+  update:
+    # In diesem Ordner sucht Flux nach den Markern `{"$imagepolicy": ...}`.
+    path: ./clusters/kuhhandel-k3s

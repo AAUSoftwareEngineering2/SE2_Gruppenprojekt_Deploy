@@ -1,0 +1,40 @@
+# Diese Datei sagt Flux:
+# "Das normale Kuhhandel-Projekt ist eine Git-Quelle, aus der du Kubernetes-
+# Templates lesen darfst."
+#
+# Wichtig: Hier wird nichts in das App-Repo geschrieben. Flux liest daraus nur
+# `deploy/k8s/...`. Die konkrete Image-Version steht in diesem Deploy-Repo.
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: kuhhandel-app-main
+  namespace: flux-system
+spec:
+  # Wie oft Flux nach Änderungen im App-Repo sucht.
+  interval: 1m0s
+
+  # Das normale Projekt-Repo mit Code und Kubernetes-Templates.
+  url: ssh://git@github.com/AAUSoftwareEngineering2/SE2_Gruppenprojekt.git
+
+  # Production liest die Templates aus dem geschützten main-Branch.
+  ref:
+    branch: main
+
+  # Dieses Secret wird beim Flux-Bootstrap beziehungsweise danach angelegt.
+  # Es braucht Leserechte auf das App-Repo.
+  secretRef:
+    name: kuhhandel-app-git-auth
+---
+# Staging liest dieselben Template-Pfade, aber aus dem staging-Branch.
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: kuhhandel-app-staging
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  url: ssh://git@github.com/AAUSoftwareEngineering2/SE2_Gruppenprojekt.git
+  ref:
+    branch: staging
+  secretRef:
+    name: kuhhandel-app-git-auth

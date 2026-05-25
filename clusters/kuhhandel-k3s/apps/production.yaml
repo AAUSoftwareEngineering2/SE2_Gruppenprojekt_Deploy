@@ -1,0 +1,39 @@
+# Diese Datei sagt Flux:
+# "Deploye den Production-Kubernetes-Ordner aus dem App-Repo."
+#
+# Die Kubernetes-Templates bleiben im normalen Projekt-Repo. Dieses Deploy-Repo
+# entscheidet nur, welche konkrete Image-Version im Cluster laufen soll.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: kuhhandel-production
+  namespace: flux-system
+spec:
+  # Wie oft Flux in Git nach Änderungen sucht und den Zielzustand prüft.
+  interval: 1m0s
+
+  # Wie schnell Flux nach einem Fehler erneut probiert.
+  retryInterval: 30s
+
+  # Wie lange Flux auf ein erfolgreiches Anwenden und Ready-Werden wartet.
+  timeout: 3m0s
+
+  # Diese Git-Quelle zeigt auf das normale Kuhhandel-App-Repo.
+  sourceRef:
+    kind: GitRepository
+    name: kuhhandel-app-main
+
+  # Das ist der Production-Einstiegspunkt im App-Repo.
+  path: ./deploy/k8s/overlays/production
+
+  # Das App-Repo darf als Default `production` verwenden. Flux ersetzt den Tag
+  # hier durch die echte Version, die gerade deployed werden soll.
+  images:
+    - name: ghcr.io/aausoftwareengineering2/kuhhandel-server
+      newTag: production # {"$imagepolicy": "flux-system:kuhhandel-server-production:tag"}
+
+  # Wenn eine Ressource aus Git entfernt wird, entfernt Flux sie auch im Cluster.
+  prune: true
+
+  # Flux wartet darauf, dass Deployments, Pods usw. wirklich ready werden.
+  wait: true

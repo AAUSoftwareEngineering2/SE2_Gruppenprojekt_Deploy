@@ -1,0 +1,57 @@
+# Diese Datei sagt Flux:
+# "Beobachte das Kuhhandel-Server-Image in GHCR und merke dir,
+# welcher Production- und welcher Staging-Tag der neueste passende Tag ist."
+#
+# Wichtig: Diese Datei entscheidet nur, welcher Tag "der neueste passende" ist.
+# Das Zurückschreiben in dieses Deploy-Repo macht `images/automation.yaml`.
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: kuhhandel-server
+  namespace: flux-system
+spec:
+  # Das ist die Container-Registry, in die unsere GitHub Actions pushen.
+  image: ghcr.io/aausoftwareengineering2/kuhhandel-server
+
+  # Wie oft Flux die Registry nach neuen Tags durchsucht.
+  interval: 1m0s
+---
+# Production verwendet echte SemVer-Tags wie `v0.1.0`, `v0.1.1`, `v0.2.0`.
+# Diese Policy wählt daraus die höchste Version.
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: kuhhandel-server-production
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: kuhhandel-server
+  filterTags:
+    # Nur Tags wie `v0.1.0` zählen als Production-Version.
+    pattern: '^v(?P<version>[0-9]+\.[0-9]+\.[0-9]+)$'
+    # Flux soll für den SemVer-Vergleich nur `0.1.0` verwenden.
+    extract: '$version'
+  policy:
+    semver:
+      range: '>=0.0.0'
+---
+# Staging verwendet Build-Tags wie `staging-42-a1b2c3d`.
+# Diese Policy wählt die höchste GitHub-Run-Nummer und damit den neuesten
+# Staging-Build.
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: kuhhandel-server-staging
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: kuhhandel-server
+  filterTags:
+    # Nur Tags wie `staging-42-a1b2c3d` zählen als Staging-Build.
+    pattern: '^staging-(?P<run>[0-9]+)-[a-f0-9]{7}$'
+    # Flux sortiert nur nach der Run-Nummer.
+    extract: '$run'
+  policy:
+    numerical:
+      # `asc` bedeutet bei Flux: höchster Wert gewinnt.
+      order: asc
