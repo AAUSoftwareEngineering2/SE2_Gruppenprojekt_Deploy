@@ -45,16 +45,14 @@ Danach muss in Cloudflare am neuen Tunnel eine Public-Hostname-Route angelegt
 werden:
 
 ```text
-Hostname:      headlamp.se-aau.com
+Hostname:      dashboard.se-aau.com
 Service Type:  HTTP
 Service URL:   headlamp.headlamp.svc.cluster.local:80
 ```
 
-Der Login in Headlamp erfolgt mit einem live erzeugten Kubernetes-Token:
-
-```bash
-kubectl -n headlamp create token headlamp-viewer --duration=24h
-```
+Headlamp verwendet intern den ServiceAccount `headlamp-viewer`. Dadurch reicht
+der Cloudflare-Access-Login im Browser; es muss kein Kubernetes-Token mehr
+manuell eingefügt werden.
 
 Der `headlamp-viewer` ist read-only. Er darf Kubernetes-Ressourcen, Nodes und
 Metrics ansehen, aber keine Secrets lesen und nichts im Cluster ändern.

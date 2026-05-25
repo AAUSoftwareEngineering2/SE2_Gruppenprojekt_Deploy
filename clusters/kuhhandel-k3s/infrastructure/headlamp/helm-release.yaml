@@ -21,6 +21,14 @@ spec:
       interval: 1h0m0s
   values:
     replicaCount: 1
+    # Cloudflare Access ist der äußere Login. Headlamp selbst nutzt danach
+    # automatisch den read-only ServiceAccount `headlamp-viewer`.
+    config:
+      unsafeUseServiceAccountToken: true
+    serviceAccount:
+      create: false
+      name: headlamp-viewer
+    clusterRoleBinding:
+      create: false
     service:
       type: ClusterIP
-
