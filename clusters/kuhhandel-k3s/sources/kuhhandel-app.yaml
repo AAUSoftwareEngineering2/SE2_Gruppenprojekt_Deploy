@@ -14,7 +14,7 @@ spec:
   interval: 1m0s
 
   # Das normale Projekt-Repo mit Code und Kubernetes-Templates.
-  url: ssh://git@github.com/AAUSoftwareEngineering2/SE2_Gruppenprojekt.git
+  url: https://github.com/AAUSoftwareEngineering2/SE2_Gruppenprojekt.git
 
   # Production liest die Templates aus dem geschützten main-Branch.
   ref:
@@ -33,7 +33,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 1m0s
-  url: ssh://git@github.com/AAUSoftwareEngineering2/SE2_Gruppenprojekt.git
+  url: https://github.com/AAUSoftwareEngineering2/SE2_Gruppenprojekt.git
   ref:
     branch: staging
   secretRef:
