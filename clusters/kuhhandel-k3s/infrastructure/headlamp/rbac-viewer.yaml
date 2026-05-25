@@ -1,0 +1,23 @@
+# Dieser Account ist für den Headlamp-Login gedacht.
+#
+# Er darf den Cluster nur ansehen (`view`), aber nichts ändern. Den eigentlichen
+# Login-Token erzeugen wir live am Server, damit kein Token im Git-Repo landet.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: headlamp-viewer
+  namespace: headlamp
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: headlamp-viewer
+subjects:
+  - kind: ServiceAccount
+    name: headlamp-viewer
+    namespace: headlamp
+roleRef:
+  kind: ClusterRole
+  name: view
+  apiGroup: rbac.authorization.k8s.io
+

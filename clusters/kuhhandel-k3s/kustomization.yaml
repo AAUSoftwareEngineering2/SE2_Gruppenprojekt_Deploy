@@ -11,3 +11,4 @@ resources:
   - images/automation.yaml
   - apps/production.yaml
   - apps/staging.yaml
+  - infrastructure/headlamp

@@ -1,0 +1,9 @@
+# Dieser Namespace trennt das Kubernetes-Dashboard vom Kuhhandel-Backend.
+#
+# Headlamp ist kein Teil der App selbst, sondern ein kleines Admin-/Viewer-Tool
+# für den Cluster. Darum bekommt es einen eigenen Bereich im Cluster.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: headlamp
+

@@ -1,0 +1,14 @@
+# Diese Datei bündelt alle Headlamp-Dateien in diesem Ordner.
+#
+# Die zentrale Cluster-Kustomization muss nur diesen Ordner referenzieren und
+# bekommt dadurch Namespace, Helm-Repository, HelmRelease und Viewer-RBAC.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - cloudflare-namespace.yaml
+  - cloudflared-deployment.yaml
+  - namespace.yaml
+  - helm-repository.yaml
+  - helm-release.yaml
+  - rbac-viewer.yaml

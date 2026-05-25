@@ -1,0 +1,13 @@
+# Diese Datei sagt Flux, wo das offizielle Headlamp-Helm-Chart liegt.
+#
+# Flux lädt von dort nur die Installationsvorlage. Welche konkrete Installation
+# gewünscht ist, steht danach in `helm-release.yaml`.
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: headlamp
+  namespace: headlamp
+spec:
+  interval: 1h0m0s
+  url: https://kubernetes-sigs.github.io/headlamp/
+

@@ -1,0 +1,26 @@
+# Diese Datei installiert Headlamp über Flux und Helm in den Cluster.
+#
+# Headlamp bekommt absichtlich nur einen internen ClusterIP-Service. Es wird
+# nicht direkt öffentlich geöffnet. Von außen kommt man später nur über den
+# bestehenden Cloudflare Tunnel plus Cloudflare Access hinein.
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: headlamp
+  namespace: headlamp
+spec:
+  interval: 10m0s
+  timeout: 5m0s
+  chart:
+    spec:
+      chart: headlamp
+      sourceRef:
+        kind: HelmRepository
+        name: headlamp
+        namespace: headlamp
+      interval: 1h0m0s
+  values:
+    replicaCount: 1
+    service:
+      type: ClusterIP
+

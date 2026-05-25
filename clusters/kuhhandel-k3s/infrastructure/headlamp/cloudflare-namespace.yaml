@@ -1,0 +1,10 @@
+# Dieser Namespace ist nur für den Headlamp-Cloudflare-Tunnel.
+#
+# Er ist getrennt von den App-Tunneln für Production und Staging, damit das
+# Dashboard einen eigenen Tunnel-Token und eine eigene Cloudflare-Konfiguration
+# bekommen kann.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cloudflare-headlamp
+
