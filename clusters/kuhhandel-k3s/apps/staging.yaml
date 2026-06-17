@@ -25,7 +25,7 @@ spec:
   # hier durch den neuesten Staging-Build, der deployed werden soll.
   images:
     - name: ghcr.io/aausoftwareengineering2/kuhhandel-server
-      newTag: staging-42-c07b3a9 # {"$imagepolicy": "flux-system:kuhhandel-server-staging:tag"}
+      newTag: staging-43-7e93c7b # {"$imagepolicy": "flux-system:kuhhandel-server-staging:tag"}
   # Wenn eine Ressource aus Git entfernt wird, entfernt Flux sie auch im Cluster.
   prune: true
   # Flux wartet darauf, dass Deployments, Pods usw. wirklich ready werden.
